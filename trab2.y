@@ -2,20 +2,48 @@
 /* calc.y */
 
 %{
-
+#include <stdio.h>
 int yyerror(char *s);
 int yylex(void);
 %}
 
 %union{
   int		int_val;
-  string*	str_val;
+  char*	str_val;
 }
 
-%start initial 
+%start initial
 
-%token	<int_val>	INTEGER_LITERAL
-%type	<int_val>	exp
+%token <int_val>	INTEGER_LITERAL
+%token <str_val> N_EQUAL
+// %token <str_val> INT
+%token <str_val> STR
+%token <str_val> ID
+%token <str_val> EQUAL
+%token <str_val> IF
+%token <str_val> WHILE
+%token <str_val> FUNCTION
+%token <str_val> MINUS
+%token <str_val> DO
+%token <str_val> ATTR
+%token <str_val> BIGGER
+%token <str_val> BIGGER_EQUAL
+%token <str_val> S_COLON
+%token <str_val> THEN
+%token <str_val> LESS
+%token <str_val> COLON
+%token <str_val> C_PAR
+%token <str_val> O_PAR
+%token <str_val> DIV
+%token <str_val> ELSE
+%token <str_val> OR
+%token <str_val> AND
+%token <str_val> LESS_EQUAL
+%token <str_val> VAR
+%token <str_val> LET
+%token <str_val> IN
+%token <str_val> END
+// %type	<int_val>	exp
 %left	PLUS
 %left	MULT
 
@@ -28,26 +56,24 @@ dec_seq: /* empty */
     | dec dec_seq
     ;
 
-id_seq: id
-    | id id_seq
+id_seq: ID
+    | ID id_seq
     ;
 
 dec: VAR ID ATTR exp
     | FUNCTION ID O_PAR id_seq C_PAR ATTR exp
 
 
-exp:		/* empty */
+exp: /* empty */
     | STR
-    | INT
+    | INTEGER_LITERAL
 		| ID exp_id
     | MINUS exp
     | exp op exp
     | O_PAR exp_seq C_PAR
-
-
     | IF exp THEN exp else_exp
     | WHILE exp DO exp
-    | let dec_seq in exp_seq end
+    | LET dec_seq IN exp_seq END
 		;
 
 exp_id: /* empty */
@@ -85,20 +111,28 @@ op :  MULT
     | OR
 
 %%
-
-int yyerror(string s)
+// char *progname;
+int yyparse();
+main( argc, argv )
+char *argv[];
 {
-  extern int linha;	// defined and maintained in lex.c
-  extern char *yytext;	// defined and maintained in lex.c
-  
-  cerr << "ERROR: " << s << " at symbol \"" << yytext;
-  cerr << "\" on line " << linha << endl;
-  exit(1);
+  // progname = argv[0];
+  // strcpy(format,"%g\n");
+  yyparse();
 }
 
 int yyerror(char *s)
 {
-  return yyerror(string(s));
+  extern int linha;	// defined and maintained in lex.c
+  extern char *yytext;	// defined and maintained in lex.c
+
+  // cerr << "ERROR: " << s << " at symbol \"" << yytext;
+  // cerr << "\" on line " << linha << endl;
+  printf("ERROR: %s AT symbol \"%s\" on line %d\n", s, yytext, linha);
+  exit(1);
 }
 
-
+// int yyerror(char *s)
+// {
+//   return yyerror(s);
+// }
