@@ -5,10 +5,10 @@ let
 in
         printf("Entre com o numero:");
         n := getint();
-        /*while i <= n do
+        while i <= n do
         (
                 f := f * i;
                 i := i + 1;
-        )*/
+        )
         printf("\nfatorial de %d = %d\n", n, f)
 end

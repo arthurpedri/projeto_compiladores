@@ -1,0 +1,19 @@
+let
+  function add(a,b) := a + b
+  function eh_maior(n,x) :=
+    if n >= x then 1
+    else 0
+
+  var n := 0
+  var x := 10
+in 
+
+  if eh_maior(n,x) then 
+    if eh_maior(n,x) then
+      printf("n maior ou igual que x\n")
+    else
+      printf("n menor que x\n")
+  else
+    printf("n menor que x\n")
+    
+end

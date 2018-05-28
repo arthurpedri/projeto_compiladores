@@ -1,0 +1,12 @@
+let
+   function soma(a,b) := a+b
+   var x:=0
+   var y:=0
+   var i := i + 1 /* teste */
+in
+   printf("entre com o valor de x: ");
+   x := getint();
+   printf("entre com o valor de y: ");
+   y := getint();
+   printf("x + y = %d\n", soma(x,y))
+end
