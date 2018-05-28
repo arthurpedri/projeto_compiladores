@@ -51,7 +51,7 @@ int yylex(void);
 initial: exp_seq
   | dec_seq
 
-dec_seq: /* empty */
+dec_seq: dec
     | dec dec_seq
     ;
 
@@ -66,8 +66,9 @@ dec: VAR ID ATTR exp
 exp: /* empty */
     | STR
     | INTEGER_LITERAL
-		| ID exp_id
-    | MINUS exp
+		| ID
+    | ID ATTR exp
+    | ID O_PAR exp_list C_PAR
     | exp op exp
     | O_PAR exp_seq C_PAR
     | IF exp THEN exp else_exp
@@ -75,15 +76,11 @@ exp: /* empty */
     | LET dec_seq IN exp_seq END
 		;
 
-exp_id: /* empty */
-    | ATTR exp
-    | O_PAR exp_list C_PAR
-    ;
+
 
 else_exp: /* empty */
     | ELSE exp
     ;
-
 
 
 exp_seq: exp
