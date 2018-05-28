@@ -1,8 +1,6 @@
-/* Mini Calculator */
-/* calc.y */
-
 %{
 #include <stdio.h>
+#include <stdlib.h>
 int yyerror(char *s);
 int yylex(void);
 %}
@@ -43,13 +41,14 @@ int yylex(void);
 %token <str_val> LET
 %token <str_val> IN
 %token <str_val> END
+%token <str_val> PLUS
+%token <str_val> MULT
 // %type	<int_val>	exp
-%left	PLUS
-%left	MULT
+
 
 %%
 
-initial: exp
+initial: exp_seq
   | dec_seq
 
 dec_seq: /* empty */
@@ -57,7 +56,7 @@ dec_seq: /* empty */
     ;
 
 id_seq: ID
-    | ID id_seq
+    | ID COLON id_seq
     ;
 
 dec: VAR ID ATTR exp
@@ -82,12 +81,10 @@ exp_id: /* empty */
     ;
 
 else_exp: /* empty */
-    | ELSE else_if
+    | ELSE exp
     ;
 
-else_if: exp
-    | IF exp THEN exp else_exp
-    ;
+
 
 exp_seq: exp
 		| exp_seq S_COLON exp
@@ -113,11 +110,8 @@ op :  MULT
 %%
 // char *progname;
 int yyparse();
-main( argc, argv )
-char *argv[];
+int main(int argc, char *argv[] )
 {
-  // progname = argv[0];
-  // strcpy(format,"%g\n");
   yyparse();
 }
 
@@ -126,13 +120,6 @@ int yyerror(char *s)
   extern int linha;	// defined and maintained in lex.c
   extern char *yytext;	// defined and maintained in lex.c
 
-  // cerr << "ERROR: " << s << " at symbol \"" << yytext;
-  // cerr << "\" on line " << linha << endl;
   printf("ERROR: %s AT symbol \"%s\" on line %d\n", s, yytext, linha);
   exit(1);
 }
-
-// int yyerror(char *s)
-// {
-//   return yyerror(s);
-// }
