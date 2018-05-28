@@ -1,0 +1,162 @@
+TRABALHO 2 - COMPILADORES
+
+ARTHUR CARVALHO DE QUEIROZ  - GRR20141754
+ARTHUR PEDRI TREVISOL       - GRR20141784
+
+Arquivos:
+
+  trab2.lex - Arquivo lex usado pelo Flex
+
+  trab2.y   - Arquivo usado pelo Bison
+
+  README
+
+  Makefile
+
+
+Gramática (com símbolos normais):
+
+  initial: exp_seq
+      | dec_seq
+
+  dec_seq: dec
+      | dec dec_seq
+
+  id_seq: ID
+      | ID , id_seq
+
+  dec: var ID := exp
+      | function ID ( id_seq ) := exp
+
+  exp: /* vazio */
+      | STR
+      | INTEGER_LITERAL
+      | ID
+      | ID := exp
+      | ID ( exp_list )
+      | exp op exp
+      | ( exp_seq )
+      | if exp then exp else_exp
+      | while exp do exp
+      | let dec_seq in exp_seq enc
+
+  else_exp: /* vazio */
+      | else exp
+
+  exp_seq: exp
+      | exp_seq ; exp
+
+  exp_list:    exp
+      | exp_list , exp
+
+  op :  *
+      | /
+      | +
+      | -
+      | =
+      | <>
+      | >
+      | <
+      | >=
+      | <=
+      | &
+      | |
+
+
+Saída de erros:
+
+  Nosso código através da função yyerror() imprime na tela qual o tipo de erro,
+  retornado pelo parser, o token e a linha.
+  Exemplo de saída:
+    ERRO: syntax error no símbolo ")" na linha 12
+  OBS:
+    Importante destacar que os erros, no caso de falta de token, serão revelados
+    no token seguinte, pois o parser irá descobrir que falta algum token ao ler
+    um token não esperado e esse token não esperado irá gerar o erro.
+
+Exemplo de 5 erros:
+
+  - Não fechar parenteses:
+    LINHA DO PROGRAMA:
+      printf("Entre com o numero:";
+    SAÍDA:
+      ERRO: syntax error no símbolo ";" na linha 6
+
+  - Palavra reservada escrita errada:
+    LINHA DO PROGRAMA:
+      va n := 0
+    SAÍDA:
+      ERRO: syntax error no símbolo "va" na linha 2
+
+  - Falta de operador
+    LINHA DO PROGRAMA:
+      f := f i;
+    SAÍDA:
+      ERRO: syntax error no símbolo "i" na linha 10
+
+  - Falta de ponto e vírgula:
+    LINHA DO PROGRAMA;
+      while i <= n do
+      (
+        f := f * i;
+        i := i + 1;
+      )
+      printf("\n");
+    SAÍDA:
+      ERRO: syntax error no símbolo "printf" na linha 13
+
+  - Falta de vírgula separando os argumentos:
+    LINHA DO PROGRAMA:
+      function soma(a b) := a+b
+    SAÍDA:
+      ERRO: syntax error no símbolo "b" na linha 2
+
+Conflitos:
+
+  Conflitos de Shift / Reduce foram todos causados em regras em que uma expressão
+  era expandida para ser uma operação entre expressões. Temos 12 operações e 5
+  estados, isso faz 60 conflitos que são resolvidos por shift de forma correta,
+  o conflito 61 acontece de forma parecida quando estamos no estado 52 com o uso
+  do ELSE, que também é resolvido de forma correta com o shift. Exemplos de
+  cada um dos estados, de acordo com o verbose do bison:
+
+  State 39
+
+     13 exp: ID ATTR exp .
+     15    | exp . op exp
+     N_EQUAL       shift, and go to state 25
+     N_EQUAL       [reduce using rule 13 (exp)]
+
+  State 48
+
+    15 exp: exp . op exp
+    15    | exp op exp .
+
+     N_EQUAL       shift, and go to state 25
+     N_EQUAL       [reduce using rule 15 (exp)]
+
+  State 52
+
+    15 exp: exp . op exp
+    17    | IF exp THEN exp . else_exp
+
+     N_EQUAL       shift, and go to state 25
+     N_EQUAL       [reduce using rule 20 (else_exp)]
+
+     ELSE          [reduce using rule 20 (else_exp)]
+
+  State 53
+
+    15 exp: exp . op exp
+    18    | WHILE exp DO exp .
+
+     N_EQUAL       shift, and go to state 25
+     N_EQUAL       [reduce using rule 18 (exp)]
+
+  State 64
+
+    15 exp: exp . op exp
+    21 else_exp: ELSE exp .
+
+     N_EQUAL       shift, and go to state 25
+     N_EQUAL       [reduce using rule 21 (else_exp)]

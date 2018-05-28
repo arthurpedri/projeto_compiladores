@@ -1,5 +1,5 @@
 let
-   function soma(a,b) := a+b
+   function soma(a b) := a+b
    var x:=0
    var y:=0
    var i := i + 1 /* teste */

@@ -14,7 +14,6 @@ int yylex(void);
 
 %token <int_val>	INTEGER_LITERAL
 %token <str_val> N_EQUAL
-// %token <str_val> INT
 %token <str_val> STR
 %token <str_val> ID
 %token <str_val> EQUAL
@@ -43,7 +42,6 @@ int yylex(void);
 %token <str_val> END
 %token <str_val> PLUS
 %token <str_val> MULT
-// %type	<int_val>	exp
 
 
 %%
@@ -105,7 +103,6 @@ op :  MULT
     | OR
 
 %%
-// char *progname;
 int yyparse();
 int main(int argc, char *argv[] )
 {
@@ -114,9 +111,9 @@ int main(int argc, char *argv[] )
 
 int yyerror(char *s)
 {
-  extern int linha;	// defined and maintained in lex.c
-  extern char *yytext;	// defined and maintained in lex.c
+  extern int linha;
+  extern char *yytext;
 
-  printf("ERROR: %s AT symbol \"%s\" on line %d\n", s, yytext, linha);
+  printf("ERRO: %s no símbolo \"%s\" na linha %d\n", s, yytext, linha);
   exit(1);
 }
