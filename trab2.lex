@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include "arvore.h"
 #include "trab2.tab.h"
 int yyerror(char *s);
 int linha = 1;
