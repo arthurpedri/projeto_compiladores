@@ -117,6 +117,16 @@ op :  MULT  { $$ = subArvore("op", 1, novoNo("MULT"), NULL, NULL, NULL, NULL, NU
 
 %%
 
+int destroiArvore (no *raiz){
+  if (!raiz) return 0;
+
+  for (int i = 0; i<raiz->qtd_filhos; i++){
+    destroiArvore(raiz->filho[i]);
+    free(raiz->filho[i]);
+  }
+  return 1;
+}
+
 no *novoNo(char *nome){
   no *novo;
   novo = malloc(sizeof(no));
@@ -208,6 +218,7 @@ int main(int argc, char *argv[] )
   no *raiz = NULL;
   yyparse(&raiz);
   printarvore(raiz, 0, 0);
+  destroiArvore(raiz);
 }
 
 int yyerror(no **raiz, char *s)
