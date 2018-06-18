@@ -17,7 +17,48 @@ Arquivos:
   
 Trabalho 3:
 
-Para o trabalho 3 usamos uma estrura parecida com árvore, onde cada novo tem uma quantidade de filhos ou é folha:
+Para o trabalho 3 usamos uma estrura parecida com árvore, onde cada nodo 
+tem uma quantidade de filhos ou é folha:
+
+  typedef struct node {
+    int qtd_filhos;
+    struct node *filho[7];
+    char nome[16];
+  } no;
+  
+O programa começa na regra "initial" que é onde criamos o nodo raiz, e 
+chama a função subArvore para dizer quem são seus filhos. 
+Se um símbolo é terminal, ele é folha, ele vai criar um nodo usando a 
+função novoNo. Se ele não é terminal ele usa a função subArvore para 
+ser criado. Se um dos seus filhos não for terminal, usaremos a 
+variável do bison '$n', para que ele seja criado posteriormente. 
+Exemplo abaixo:
+
+exp:    
+| O_PAR exp_seq C_PAR { $$ = subArvore("exp", 3, novoNo("("), $2,
+                             novoNo(")"), NULL, NULL, NULL, NULL);} 
+                             
+Na função acima subArvore é chamada da seguinte forma:
+  Cria o nó pai "exp", ele é uma expressão da linguagem tiger.
+  Declara que tem 3 filhos e aponta para eles.
+    O primeiro é terminal e é declarado com novoNo("(").
+    O segundo ainda não é declarado pois não é terminal ($2).
+    O terceiro também é declarado com novoNo(")").
+    
+Obs.: A função funciona aceitando no máximo 7 filhos, que é a maior
+chamada possível para essa gramática, passamos a quantidade de
+filhos necessária e NULL nos filhos não utilizados.
+
+  no *subArvore(char *nome, int filhos, no *filho1, no *filho2, 
+    no *filho3, no *filho4, no *filho5, no *filho6, no *filho7);
+
+  no *novoNo(char *nome);
+
+Quando a árvore for gerada, chamamos a função que imprime a árvore
+de forma recursiva, formatando a saída de maneira mais legível:
+
+  void printarvore(no *raiz, int ultimo, int nivel);
+
 
 
 Trabalho 2:
