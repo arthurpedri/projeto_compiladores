@@ -1,4 +1,4 @@
-TRABALHO 2 - COMPILADORES
+TRABALHO 3 - COMPILADORES
 
 ARTHUR CARVALHO DE QUEIROZ  - GRR20141754
 ARTHUR PEDRI TREVISOL       - GRR20141784
@@ -13,10 +13,18 @@ Arquivos:
 
   Makefile
 
+  arvore.h  - Arquivo com a estrutura de árvore usada para o trabalho 3
+  
+Trabalho 3:
+
+Para o trabalho 3 usamos uma estrura parecida com árvore, onde cada novo tem uma quantidade de filhos ou é folha:
+
+
+Trabalho 2:
 
 Gramática (com símbolos normais):
 
-  initial: exp_seq
+  initial: exp
       | dec_seq
 
   dec_seq: dec
